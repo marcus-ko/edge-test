@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Modal with Iframe using PmallConfigulator</title>
+        <script src="https://www.personalizationmall.com/content/js/jquery-3.5.1.min.js"></script>
+    </head>
+    <body>
+
+        <p>Button Element</p>
+        <button type="button" id="btnPersonalize1"
+            class="primary-btn-base primary-black width360px centered pmallIFrameModalTrigger">Personalize</button>
+
+        <p>Anchor Element</p>
+        <a href="javascript:void(0)" id="btnPersonalize2"
+            class="primary-btn-base primary-black width360px centered pmallIFrameModalTrigger">Personalize</a>
+
+        <script>
+            var PmallConfigulator = function (options) {
+                var pmallApp = {
+                    pmallModalURL: null,
+                    options: $.extend({}, options),
+
+                    init: function (selector) {
+                        this.cacheDom(selector);
+                        this.bindEvents();
+                    },
+                    cacheDom: function (selector) {
+                        $personalize_btn = $(selector);
+                        this.pmallModalURL = "https://test.portfoliomk.com/barebones-test.html";
+                    },
+                    bindEvents: function () {
+                        $personalize_btn.on("click touchstart", this.loadPmallIFrameModal.bind(this));
+                    },
+                    loadPmallIFrameModal: function (event) {
+                        event.preventDefault();
+                        this.showFullHeightWindowFrame(this.pmallModalURL);
+                    },
+                    showFullHeightWindowFrame: function (src) {
+                        var iframeHtml = '<iframe name="pmallmodaliframe" id="pmallmodaliframe" src="' + src + '" frameborder="0"></iframe>';
+                        var modalHtml = '<div class="jquery-modal blocker current"><div class="pmallmodal"><a href="javascript:" class="close-modal"></a>' + iframeHtml + '</div></div>';
+
+                        if (!$(".pmallmodal").length) {
+                            $(document.body).append(modalHtml);
+                        }
+
+                        $(".close-modal").click(function () {
+                            $(".pmallmodal").remove();
+                        });
+                    }
+                };
+                return pmallApp;
+            };
+
+            // Initialize the modal on a specific button or anchor using individual calls
+            $(document).ready(function () {
+                var $personalize_btn1 = new PmallConfigulator();
+                $personalize_btn1.init("#btnPersonalize1"); // Initialize the button element
+
+                var $personalize_btn2 = new PmallConfigulator();
+                $personalize_btn2.init("#btnPersonalize2"); // Initialize the anchor element
+            });
+        </script>
+
+    </body>
+</html>
